@@ -31,6 +31,6 @@ app.get('/youtube', (req, res)=> {
     youtubeFunction(req.query.url, res)
 })
 
-app.listen(8080, ()=> {
+app.listen(3000, ()=> {
     console.log('Server is running on PORT http://localhost:8080/')
 })
