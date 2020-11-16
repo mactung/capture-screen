@@ -3,19 +3,40 @@ const puppeteer = require('puppeteer');
 
 module.exports =  (url) => {
     return new Promise(async (resolve, reject) => {
+        let nameWebsite = url.replace(/\s/g, '')
+                            .replace(/(^\w+:|^)\/\//, '')
+                            .replace(/\/+$/, '')
+                            .replace('wwww', '')
+                            .replace(/\./g,'_');
+        console.log(nameWebsite);
         try {
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
+            
             await page.setViewport({
-                    width: 1920,
-                    height: 1920,
-                    deviceScaleFactor: 0,
+                    width: 1280,
+                    height: 1280,
+                    deviceScaleFactor: 1,
                 });
-            await page.goto(url,{ waitUntil: 'networkidle0' });
-            let nameImage = md5(url) + '.png'
-            await page.screenshot({path: './public/screenshoot/' + nameImage});
+            await page.goto(url,{ waitUntil: 'networkidle2' });
+            let imageDesktop =  'desktop_' + nameWebsite + '_1280_1280.png'
+            await page.screenshot({path: './public/screenshoot/' + imageDesktop});
+
+            await page.setViewport({
+                width: 375,
+                height: 812,
+                deviceScaleFactor: 2,
+                });
+            await page.goto(url, {waitUntil: 'networkidle0'});
+            let imageMobile = 'mobile_' + nameWebsite + '_375_812.png'
+            await page.screenshot({path: './public/screenshoot/' + imageMobile});
+
             await browser.close();
-            resolve(nameImage);
+            console.log('done');
+            resolve({
+                desktop: imageDesktop,
+                mobile: imageMobile
+            });
 
         }catch(error){
             reject(error);
@@ -23,19 +44,3 @@ module.exports =  (url) => {
         
     })
 };
-
-
-// const browser = await puppeteer.launch();
-//     const page = await browser.newPage();
-//     await page.goto(url);
-//     await page.setViewport({
-//             width: 1920,
-//             height: 40000,
-//             deviceScaleFactor: 1,
-//         });
-
-    
-//     const element = await page.$('body > div.container > div > div > div.table-responsive');  
-
-//     await element.screenshot({path: './screenshoot/' + md5(url) + '.png'});
-//     await browser.close();

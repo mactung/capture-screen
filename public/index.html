@@ -15,10 +15,11 @@
     <div class="container">
         <div class="input-group mb-3 pt-5">
           <input type="text" class="form-control" id="url" placeholder="Link Website" aria-label="Link Website">
-          <button class="btn primary" id="send-url-btn">ScreenShoot</button>
+          <button class="btn btn-primary" id="send-url-btn">ScreenShoot</button>
         </div>
-        <div class="image" id="image-result">
-
+        
+        <div id="result-container" class="row text-center">
+            
         </div>
     </div>
     
@@ -27,6 +28,7 @@
     
     $('#send-url-btn').on('click', ()=> {
         url = $('#url').val();
+        $('#result-container').empty().append(`<div class="spinner-border text-primary"></div>`);
         fetch('/screen-shoot', {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             // mode: 'cors', // no-cors, *cors, same-origin
@@ -39,8 +41,14 @@
         }).then((result)=> {
             return result.json()
         }).then(data => {
-            let imagePath = '/screenshoot/' + data.image;
-            $('#image-result').empty().append(`<img src="${imagePath}" width="100%">`);
+            console.log(data);
+            $('#result-container').empty();
+            let imageDesktop = '/screenshoot/' + data.desktop;
+            let imageMobile = '/screenshoot/' + data.mobile;
+            let imageDesktopEl = `<div class="col-8 image p-2 border"><img src="${imageDesktop}" width="100%"></div>`;
+            let imageMobileEl = `<div class="col-4 image p-2 border"><img src="${imageMobile}" width="100%"></div>`;
+            $('#result-container').append(imageDesktopEl);
+            $('#result-container').append(imageMobileEl);
         })
     })
 
