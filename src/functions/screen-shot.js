@@ -8,7 +8,7 @@ module.exports =  (url) => {
         if(!url.includes('http')){
             url = 'http://' + url;
         }
-        const browser = await puppeteer.launch({headless: true});
+        const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
         try {
             const page = await browser.newPage();
             // console.log('name', webTitle);
